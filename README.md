@@ -116,4 +116,4 @@ Unit tests are implemented for the backend API using Jest and Supertest.
 - ✅ Simple seed script (\`seed.js\`) to insert sample jobs
 - ✅ Unit tests on API endpoints using Jest
 - ✅ Dedicated Global Error Handler and 404 Route in Express
-- ✅ Premium UI design with animations and responsive layouts
+
