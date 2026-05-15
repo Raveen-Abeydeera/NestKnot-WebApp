@@ -2,7 +2,6 @@
 
 A full-stack web application designed for homeowners to post service requests (e.g., plumbing, electrical, carpentry) and for local tradespeople to browse, view details, and manage these open requests.
 
-This project was built as a solution for the **Full-Stack Developer Intern Technical Assessment**.
 
 ## 🚀 Tech Stack
 
