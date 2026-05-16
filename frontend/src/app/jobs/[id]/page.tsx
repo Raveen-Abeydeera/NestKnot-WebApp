@@ -37,7 +37,7 @@ export default function JobDetails() {
   };
 
   const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (!job || !isOwner) return;
+    if (!job) return;
     setStatusUpdating(true);
     try {
       const updatedJob = await updateJobStatus(job._id, e.target.value);
@@ -108,12 +108,12 @@ export default function JobDetails() {
                 <select
                   value={job.status}
                   onChange={handleStatusChange}
-                  disabled={statusUpdating || !isOwner}
+                  disabled={statusUpdating}
                   className={`px-sm py-xs rounded-lg font-label-md appearance-none cursor-pointer border border-transparent hover:border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary transition-all pr-8 relative ${
                     job.status === 'Open' ? 'bg-secondary-container text-on-secondary-container' : 
                     job.status === 'In Progress' ? 'bg-tertiary-container text-on-tertiary-container' : 
                     'bg-surface-variant text-on-surface-variant'
-                  } ${(statusUpdating || !isOwner) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${statusUpdating ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <option value="Open">Open</option>
                   <option value="In Progress">In Progress</option>

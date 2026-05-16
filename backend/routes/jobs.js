@@ -68,22 +68,17 @@ router.post('/', auth, async (req, res, next) => {
 });
 
 // PATCH /api/jobs/:id - Update status
-router.patch('/:id', auth, async (req, res, next) => {
+router.patch('/:id', async (req, res, next) => {
   try {
     const { status } = req.body;
     if (!status) {
       return res.status(400).json({ error: 'Status is required' });
     }
 
-    const user = await User.findById(req.user.id);
     const job = await JobRequest.findById(req.params.id);
 
     if (!job) {
       return res.status(404).json({ error: 'Job not found' });
-    }
-
-    if (job.contactEmail !== user.email) {
-      return res.status(403).json({ error: 'Not authorized to update this job' });
     }
 
     job.status = status;
