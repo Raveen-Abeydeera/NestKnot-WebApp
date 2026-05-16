@@ -66,10 +66,9 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10 lg:hidden"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10"></div>
         <Image
-          src="/homepage.png"
+          src="/homepage.jpg"
           alt="NestKnot Services"
           fill
-          unoptimized
           className="object-cover object-top lg:object-right-top"
           priority
         />
