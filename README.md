@@ -100,20 +100,4 @@ Unit tests are implemented for the backend API using Jest and Supertest.
 
 ---
 
-## 🧪 API Endpoints
-
-- \`GET /api/jobs\` - Fetch all jobs (Supports queries: \`?category\`, \`?status\`, \`?search\`, \`?location\`, \`?sortBy\`)
-- \`GET /api/jobs/:id\` - Fetch a single job by ID
-- \`POST /api/jobs\` - Create a new job (Requires JWT Auth)
-- \`PATCH /api/jobs/:id\` - Update job status
-- \`DELETE /api/jobs/:id\` - Delete a job (Requires JWT Auth)
-- \`POST /api/auth/register\` - Register a new user
-- \`POST /api/auth/login\` - Login and receive JWT
-
-## 📝 Bonus Requirements Fulfilled
-- ✅ Keyword search across title and description
-- ✅ JWT-based authentication for posting and deleting jobs
-- ✅ Simple seed script (\`seed.js\`) to insert sample jobs
-- ✅ Unit tests on API endpoints using Jest
-- ✅ Dedicated Global Error Handler and 404 Route in Express
 
