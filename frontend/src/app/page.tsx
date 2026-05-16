@@ -58,7 +58,7 @@ export default function Home() {
   const categories = ['Plumbing', 'Electrical', 'Carpentry', 'Painting', 'General Handyman'];
 
   return (
-    <div className="w-full flex flex-col gap-xl">
+    <div className="relative z-0 w-full flex flex-col gap-xl">
       {/* Decorative background image sticking to the edge of the screen */}
       <div className="absolute top-[80px] lg:top-[100px] right-0 w-full lg:w-[90%] h-[500px] lg:h-[600px] opacity-[85%] lg:opacity-100 pointer-events-none z-[-1]">
         <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent z-10 hidden lg:block"></div>
@@ -69,6 +69,7 @@ export default function Home() {
           src="/homepage.png"
           alt="NestKnot Services"
           fill
+          unoptimized
           className="object-cover object-top lg:object-right-top"
           priority
         />
