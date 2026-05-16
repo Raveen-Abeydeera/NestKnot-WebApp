@@ -12,12 +12,14 @@ export default function JobDetails() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const [job, setJob] = useState<JobRequest | null>(null);
   const [loading, setLoading] = useState(true);
   const [statusUpdating, setStatusUpdating] = useState(false);
   const [error, setError] = useState('');
+
+  const isOwner = isAuthenticated && user?.email === job?.contactEmail;
 
   useEffect(() => {
     fetchJob();
@@ -35,7 +37,7 @@ export default function JobDetails() {
   };
 
   const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (!job) return;
+    if (!job || !isOwner) return;
     setStatusUpdating(true);
     try {
       const updatedJob = await updateJobStatus(job._id, e.target.value);
@@ -48,6 +50,7 @@ export default function JobDetails() {
   };
 
   const handleDelete = async () => {
+    if (!isOwner) return;
     if (!window.confirm('Are you sure you want to delete this job request?')) return;
     try {
       await deleteJob(id);
@@ -105,12 +108,12 @@ export default function JobDetails() {
                 <select
                   value={job.status}
                   onChange={handleStatusChange}
-                  disabled={statusUpdating}
+                  disabled={statusUpdating || !isOwner}
                   className={`px-sm py-xs rounded-lg font-label-md appearance-none cursor-pointer border border-transparent hover:border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary transition-all pr-8 relative ${
                     job.status === 'Open' ? 'bg-secondary-container text-on-secondary-container' : 
                     job.status === 'In Progress' ? 'bg-tertiary-container text-on-tertiary-container' : 
                     'bg-surface-variant text-on-surface-variant'
-                  } ${statusUpdating ? 'opacity-50' : ''}`}
+                  } ${(statusUpdating || !isOwner) ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <option value="Open">Open</option>
                   <option value="In Progress">In Progress</option>
@@ -164,7 +167,7 @@ export default function JobDetails() {
             </div>
 
             <div className="pt-md border-t border-outline-variant">
-              {isAuthenticated && (
+              {isOwner && (
                 <button
                   onClick={handleDelete}
                   className="w-full flex items-center justify-center gap-xs text-error hover:bg-error-container hover:text-on-error-container border border-error/20 py-sm rounded-lg transition-colors font-label-md"

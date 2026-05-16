@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function NewJob() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -18,7 +18,7 @@ export default function NewJob() {
     description: '',
     location: '',
     contactName: '',
-    contactEmail: '',
+    contactEmail: user?.email || '',
   });
 
   useEffect(() => {
@@ -26,6 +26,12 @@ export default function NewJob() {
       router.push('/login');
     }
   }, [isAuthenticated, router]);
+
+  useEffect(() => {
+    if (user?.email) {
+      setFormData(prev => ({ ...prev, contactEmail: user.email }));
+    }
+  }, [user]);
 
   if (!isAuthenticated) return null;
 
@@ -176,11 +182,10 @@ export default function NewJob() {
                 type="email"
                 id="contactEmail"
                 name="contactEmail"
-                required
+                readOnly
+                disabled
                 value={formData.contactEmail}
-                onChange={handleChange}
-                placeholder="john@example.com"
-                className="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-lg px-sm py-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md placeholder:text-outline-variant"
+                className="w-full bg-surface-container-high border border-outline-variant text-on-surface-variant rounded-lg px-sm py-sm focus:outline-none font-body-md text-body-md cursor-not-allowed"
               />
             </div>
           </div>

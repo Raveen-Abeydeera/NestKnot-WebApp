@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const JobRequest = require('../models/JobRequest');
+const User = require('../models/User');
 const auth = require('../middleware/auth');
 
 // GET /api/jobs - List all jobs
@@ -49,7 +50,12 @@ router.get('/:id', async (req, res, next) => {
 // POST /api/jobs - Create a new job
 router.post('/', auth, async (req, res, next) => {
   try {
-    const newJob = new JobRequest(req.body);
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    const newJobData = { ...req.body, contactEmail: user.email };
+    const newJob = new JobRequest(newJobData);
     const savedJob = await newJob.save();
     res.status(201).json(savedJob);
   } catch (error) {
@@ -62,22 +68,27 @@ router.post('/', auth, async (req, res, next) => {
 });
 
 // PATCH /api/jobs/:id - Update status
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', auth, async (req, res, next) => {
   try {
     const { status } = req.body;
     if (!status) {
       return res.status(400).json({ error: 'Status is required' });
     }
 
-    const job = await JobRequest.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true, runValidators: true }
-    );
+    const user = await User.findById(req.user.id);
+    const job = await JobRequest.findById(req.params.id);
 
     if (!job) {
       return res.status(404).json({ error: 'Job not found' });
     }
+
+    if (job.contactEmail !== user.email) {
+      return res.status(403).json({ error: 'Not authorized to update this job' });
+    }
+
+    job.status = status;
+    await job.save();
+
     res.json(job);
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -91,10 +102,18 @@ router.patch('/:id', async (req, res, next) => {
 // DELETE /api/jobs/:id - Delete a job
 router.delete('/:id', auth, async (req, res, next) => {
   try {
-    const job = await JobRequest.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.user.id);
+    const job = await JobRequest.findById(req.params.id);
+    
     if (!job) {
       return res.status(404).json({ error: 'Job not found' });
     }
+
+    if (job.contactEmail !== user.email) {
+      return res.status(403).json({ error: 'Not authorized to delete this job' });
+    }
+
+    await job.deleteOne();
     res.json({ message: 'Job deleted successfully' });
   } catch (error) {
     next(error);
