@@ -69,7 +69,8 @@ export default function Home() {
           src="/homepage.jpg"
           alt="NestKnot Services"
           fill
-          className="object-cover object-top lg:object-right-top"
+          unoptimized
+          className="object-cover object-top lg:object-center"
           priority
         />
       </div>
